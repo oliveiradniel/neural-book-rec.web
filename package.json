@@ -11,8 +11,10 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.2.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.3",
@@ -28,6 +30,7 @@
     "globals": "^16.5.0",
     "husky": "^8.0.0",
     "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1"
