@@ -1,0 +1,27 @@
+export const Genre = {
+  FANTASY: 'FANTASY',
+  SCIENCE_FICTION: 'SCIENCE_FICTION',
+  ROMANCE: 'ROMANCE',
+  HORROR: 'HORROR',
+  THRILLER: 'THRILLER',
+  MYSTERY: 'MYSTERY',
+  ADVENTURE: 'ADVENTURE',
+  DRAMA: 'DRAMA',
+  HISTORICAL_FICTION: 'HISTORICAL_FICTION',
+  DYSTOPIA: 'DYSTOPIA',
+  BIOGRAPHY: 'BIOGRAPHY',
+  PHILOSOPHY: 'PHILOSOPHY',
+  SELF_HELP: 'SELF_HELP',
+  BUSINESS: 'BUSINESS',
+  SCIENCE: 'SCIENCE',
+  TECHNOLOGY: 'TECHNOLOGY',
+  POETRY: 'POETRY',
+  CHILDREN: 'CHILDREN',
+} as const;
+
+export type Genre = (typeof Genre)[keyof typeof Genre];
+
+export type LiteraryGenre = {
+  id: string;
+  name: Genre;
+};
