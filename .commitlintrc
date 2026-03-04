@@ -47,7 +47,8 @@
         "form",
         "service-layer",
         "layout",
-        "tooling"
+        "tooling",
+        "domain"
       ]
     ],
     "subject-case": [
