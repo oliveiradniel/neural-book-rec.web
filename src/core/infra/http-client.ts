@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 
 import { env } from '../../config/env';
 
@@ -9,33 +9,18 @@ export const httpClient = axios.create({
 });
 
 export class HttpClient implements IHttpClient {
-  private readonly basePath: string;
-
-  constructor(basePath?: string) {
-    this.basePath = basePath ?? '';
-  }
-
   async get<TResponse>(
     path: string,
     config?: HttpRequestConfig,
-  ): Promise<TResponse> {
-    const response = await httpClient.get<TResponse>(
-      `${this.basePath}/${path}`,
-      config,
-    );
-    return response.data;
+  ): Promise<AxiosResponse<TResponse>> {
+    return await httpClient.get<TResponse>(path, config);
   }
 
   async post<TBody, TResponse>(
     path: string,
     body: TBody,
     config?: HttpRequestConfig,
-  ): Promise<TResponse> {
-    const response = await httpClient.post<TResponse>(
-      `${this.basePath}/${path}`,
-      body,
-      config,
-    );
-    return response.data;
+  ): Promise<AxiosResponse<TResponse>> {
+    return await httpClient.post<TResponse>(path, body, config);
   }
 }
