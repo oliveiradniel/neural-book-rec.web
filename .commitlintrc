@@ -48,7 +48,8 @@
         "service-layer",
         "layout",
         "tooling",
-        "domain"
+        "domain",
+        "home"
       ]
     ],
     "subject-case": [
