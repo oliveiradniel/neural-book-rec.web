@@ -149,28 +149,30 @@ export function Home() {
               <div className="mt-4 flex flex-wrap gap-2">
                 {selectedUser?.readings.map((reading) => (
                   <div
-                    key={reading.title}
+                    key={reading.book.title}
                     className="flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md"
                   >
                     <span
-                      title={reading.title}
+                      title={reading.book.title}
                       className="text-primary max-w-50 truncate text-sm font-medium"
                     >
-                      {reading.title}
+                      {reading.book.title}
                     </span>
 
                     <span className="text-sm">
                       Autor:{' '}
-                      <strong className="font-medium">{reading.author}</strong>
+                      <strong className="font-medium">
+                        {reading.book.author.name}
+                      </strong>
                     </span>
 
                     <div className="mt-2 flex gap-1">
-                      {reading.literaryGenres.map((genre) => (
+                      {reading.book.literaryGenres.map((genre) => (
                         <span
-                          key={genre}
+                          key={genre.id}
                           className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
                         >
-                          {genreLabels[genre]}
+                          {genreLabels[genre.name]}
                         </span>
                       ))}
                     </div>
