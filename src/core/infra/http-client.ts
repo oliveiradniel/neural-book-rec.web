@@ -9,18 +9,26 @@ export const httpClient = axios.create({
 });
 
 export class HttpClient implements IHttpClient {
-  async get<TResponse>(
+  get<TResponse>(
     path: string,
     config?: HttpRequestConfig,
   ): Promise<AxiosResponse<TResponse>> {
-    return await httpClient.get<TResponse>(path, config);
+    return httpClient.get<TResponse>(path, config);
   }
 
-  async post<TBody, TResponse>(
+  post<TBody, TResponse>(
     path: string,
     body: TBody,
     config?: HttpRequestConfig,
   ): Promise<AxiosResponse<TResponse>> {
-    return await httpClient.post<TResponse>(path, body, config);
+    return httpClient.post<TResponse>(path, body, config);
+  }
+
+  patch<TBody, TResponse>(
+    path: string,
+    body: TBody,
+    config?: HttpRequestConfig,
+  ): Promise<AxiosResponse<TResponse>> {
+    return httpClient.patch<TResponse>(path, body, config);
   }
 }

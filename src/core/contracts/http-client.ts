@@ -15,4 +15,9 @@ export abstract class IHttpClient {
     body: TBody,
     config?: HttpRequestConfig,
   ): Promise<AxiosResponse<TResponse>>;
+  abstract patch<TBody, TResponse>(
+    path: string,
+    body: TBody,
+    config?: HttpRequestConfig,
+  ): Promise<AxiosResponse<TResponse>>;
 }
