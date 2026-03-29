@@ -58,7 +58,9 @@ export function UnreadBooks({
       <div className="flex items-center justify-between">
         {userId && (
           <div className="flex items-center gap-4">
-            <span>{isLoading ? 'Carregando livros' : 'Livros'}</span>
+            <span className="text-xl">
+              {isLoading ? 'Carregando livros' : 'Livros'}
+            </span>
 
             <Input
               placeholder="Procurar pelo nome do livro"

@@ -52,6 +52,8 @@ export function useCreateReading() {
       const previousDataUnreadBooks =
         queryClient.getQueryData<UnreadBook[]>(unreadBooksQueryKey);
 
+      const tmpNewReadingId = String(Math.random());
+
       queryClient.setQueryData<UserCachedData>(
         userWithReadingsQueryKey,
         (old) => {
@@ -65,7 +67,7 @@ export function useCreateReading() {
           );
 
           const newReading: ReadingBook = {
-            id: String(Math.random()),
+            id: tmpNewReadingId,
             book: {
               id: variables.book.id,
 
@@ -101,22 +103,25 @@ export function useCreateReading() {
         unreadBooksQueryKey,
         previousDataUserWithReadings,
         previousDataUnreadBooks,
+        tmpNewReadingId,
       };
     },
-    onSuccess: (_data, variables) => {
-      const queryKey = USER_WITH_READINGS_QUERY_KEY(variables.userId);
+    onSuccess: (data, _variables, context) => {
+      queryClient.setQueryData<UserCachedData>(
+        context.userWithReadingsQueryKey,
+        (old) => {
+          if (!old) return old;
 
-      queryClient.setQueryData<UserCachedData>(queryKey, (old) => {
-        if (!old) return old;
+          return {
+            ...old,
+            readings: old.readings.map((reading) => {
+              if (reading.id !== context.tmpNewReadingId) return reading;
 
-        return {
-          ...old,
-          readings: old.readings.map((reading) => ({
-            ...reading,
-            fetchStatus: undefined,
-          })),
-        };
-      });
+              return data;
+            }),
+          };
+        },
+      );
     },
     onError: async (_error, _variables, context) => {
       await queryClient.cancelQueries({

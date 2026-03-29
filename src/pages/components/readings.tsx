@@ -60,7 +60,7 @@ export function Readings({ user, readings, isLoading }: ReadingsProps) {
       <div className="flex items-center justify-between">
         {user.id && (
           <div className="flex items-center gap-4">
-            <span>
+            <span className="text-xl">
               {isLoading ? 'Carregando leituras' : `Leituras de ${user?.name}`}
             </span>
 
