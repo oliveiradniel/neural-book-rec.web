@@ -23,7 +23,7 @@ export function UserSelect({
 }: UserSelectProps) {
   const selectUserPlaceholder = isLoading
     ? 'Carregando usuários...'
-    : userId || 'Selecione um usuário';
+    : users.find((user) => user.id === userId)?.name || 'Selecione um usuário';
 
   return (
     <Select

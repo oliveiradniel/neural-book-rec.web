@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import { useListOnlyUserNames } from '@/core/hooks/use-list-only-user-names';
 import { useGetUserWithReadings } from '@/core/hooks/use-get-user-with-readings';
@@ -26,8 +26,16 @@ export function Home() {
   const { unreadBooks, isLoadingUnreadBooks } =
     useListUnreadBooks(selectedUserId);
 
+  useLayoutEffect(() => {
+    if (onlyUserNames.length > 0) {
+      setTimeout(() => {
+        setSelectedUserId(onlyUserNames[1].id);
+      });
+    }
+  }, [onlyUserNames]);
+
   return (
-    <div className="h-screen w-screen p-8">
+    <div className="h-screen w-screen overflow-x-hidden p-8">
       <h1 className="text-4xl font-medium">
         Seja bem-vindo ao <span className="text-primary">Neural Book Rec</span>
       </h1>
