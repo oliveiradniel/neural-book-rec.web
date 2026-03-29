@@ -1,5 +1,6 @@
 import type { IBooksService } from '../contracts/books-service';
 import type { IHttpClient } from '../contracts/http-client';
+import type { Book } from '../domain/entities/book';
 import type { Reading } from '../domain/entities/reading';
 import type { UpdateReadingData } from '../domain/types/update-reading-data';
 
@@ -8,6 +9,14 @@ export class BooksService implements IBooksService {
 
   constructor(httpClient: IHttpClient) {
     this.httpClient = httpClient;
+  }
+
+  async getUnreadBooksByUserId(userId: string): Promise<Book[]> {
+    const response = await this.httpClient.get<Book[]>(
+      `books/unread/${userId}`,
+    );
+
+    return response.data;
   }
 
   async updateReading(
