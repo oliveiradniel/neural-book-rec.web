@@ -28,14 +28,17 @@ import { Separator } from '@/components/ui/separator';
 import { ReadingStatus } from '@/core/domain/entities/reading';
 import { Genre } from '@/core/domain/entities/literary-genre';
 import { Spinner } from '@/components/ui/spinner';
+import { useListUnreadBooks } from '@/core/hooks/use-list-unread-books';
+import { Button } from '@/components/ui/button';
 
 export function Home() {
-  const { onlyUserNames, isLoadingOnlyUserNames } = useListOnlyUserNames();
-
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
+  const { onlyUserNames, isLoadingOnlyUserNames } = useListOnlyUserNames();
   const { userWithReadings, isLoadingUserWithReadings } =
     useGetUserWithReadings(selectedUserId);
+  const { unreadBooks, isLoadingUnreadBooks } =
+    useListUnreadBooks(selectedUserId);
 
   const readingStatusLabels: Record<ReadingStatus, string> = {
     READ: 'Concluído',
@@ -185,7 +188,7 @@ export function Home() {
                       </strong>
                     </span>
 
-                    <div className="mt-2 flex gap-1">
+                    <div className="mt-2 flex flex-wrap gap-1">
                       {reading.book.literaryGenres.map((genre) => (
                         <span
                           key={genre.id}
@@ -196,7 +199,7 @@ export function Home() {
                       ))}
                     </div>
 
-                    <div className="mt-2">
+                    <div className="mt-3 flex flex-1 items-end justify-between">
                       <strong
                         className={cn(
                           'rounded-full px-2 py-1 text-xs font-medium',
@@ -208,21 +211,93 @@ export function Home() {
                       >
                         {readingStatusLabels[reading.status]}
                       </strong>
+
+                      <div className="mt-2 flex items-center gap-1">
+                        {reading.rating ? (
+                          Array.from({ length: reading.rating }, (_, i) => (
+                            <StarIcon
+                              key={i}
+                              className="size-3 text-yellow-500"
+                            />
+                          ))
+                        ) : (
+                          <span className="text-xs text-gray-400">
+                            Sem avaliação
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            {selectedUserId && (
+              <span>
+                {isLoadingUnreadBooks ? 'Carregando livros' : 'Livros'}
+              </span>
+            )}
+
+            {isLoadingUnreadBooks && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <Skeleton
+                    key={`skeleton-book-${index}`}
+                    className="flex h-26 w-full max-w-60 flex-col rounded-md"
+                  />
+                ))}
+              </div>
+            )}
+
+            {!isLoadingUnreadBooks && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {unreadBooks?.map((book) => (
+                  <div
+                    key={book.id}
+                    className="flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span
+                        title={book.title}
+                        className="text-primary max-w-46 truncate text-sm font-medium"
+                      >
+                        {book.title}
+                      </span>
                     </div>
 
-                    <div className="mt-2 flex items-center gap-1">
-                      {reading.rating ? (
-                        Array.from({ length: reading.rating }, (_, i) => (
-                          <StarIcon
-                            key={i}
-                            className="size-3 text-yellow-500"
-                          />
-                        ))
-                      ) : (
-                        <span className="text-xs text-gray-400">
-                          Sem avaliação
+                    <span className="text-sm">
+                      Autor:{' '}
+                      <strong className="font-medium">
+                        {book.author.name}
+                      </strong>
+                    </span>
+
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {book.literaryGenres.map((genre) => (
+                        <span
+                          key={genre.id}
+                          className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                        >
+                          {genreLabels[genre.name]}
                         </span>
-                      )}
+                      ))}
+                    </div>
+
+                    <span className="mt-2 text-xs">
+                      Leituras ativas:{' '}
+                      <strong className="text-primary">
+                        {book.countActiveReadings}
+                      </strong>
+                    </span>
+
+                    <div className="mt-2 flex flex-1 items-end gap-2">
+                      <Button size="xs">Ler</Button>
+
+                      <Button variant="outline" size="xs">
+                        Quero ler
+                      </Button>
                     </div>
                   </div>
                 ))}
