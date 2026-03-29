@@ -96,6 +96,12 @@ export function CreateReadingDialog({
                 className="flex items-center"
                 onValueChange={(value: ReadingStatus) => {
                   setReadingStatus(value);
+
+                  if (value === ReadingStatus.READ) {
+                    setRating(1);
+                  } else {
+                    setRating(0);
+                  }
                 }}
               >
                 <div className="flex items-center gap-2">
