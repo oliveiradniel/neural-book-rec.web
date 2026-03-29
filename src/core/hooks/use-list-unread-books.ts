@@ -22,7 +22,7 @@ export function useListUnreadBooks(userId: string | null) {
   });
 
   return {
-    unreadBooks: data,
+    unreadBooks: data ?? [],
     isLoadingUnreadBooks: isLoading,
   };
 }
