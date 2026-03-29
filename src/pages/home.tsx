@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { useListOnlyUserNames } from '@/core/hooks/use-list-only-user-names';
+import { useGetUserWithReadings } from '@/core/hooks/use-get-user-with-readings';
+
 import { cn } from '@/lib/utils';
 
 import { StarIcon } from 'lucide-react';
@@ -19,14 +22,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-// import { EditReadingDialog } from './components/edit-reading-dialog';
+import { EditReadingDialog } from './components/edit-reading-dialog';
 import { Separator } from '@/components/ui/separator';
 
-// import type { UserWithReadings } from '@/core/domain/types/user-with-readings';
 import { ReadingStatus } from '@/core/domain/entities/reading';
 import { Genre } from '@/core/domain/entities/literary-genre';
-import { useGetUserWithReadings } from '@/core/hooks/use-get-user-with-readings';
-import { useListOnlyUserNames } from '@/core/hooks/use-list-only-user-names';
+import { Spinner } from '@/components/ui/spinner';
 
 export function Home() {
   const { onlyUserNames, isLoadingOnlyUserNames } = useListOnlyUserNames();
@@ -144,24 +145,37 @@ export function Home() {
                 {userWithReadings?.readings.map((reading) => (
                   <div
                     key={reading.id}
-                    className="flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md"
+                    className={cn(
+                      'flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md',
+                      reading.fetchStatus === 'pending' && 'opacity-70',
+                      reading.fetchStatus === 'error' &&
+                        'border-destructive/40 border',
+                    )}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span
-                        title={reading.book.title}
-                        className="text-primary max-w-50 truncate text-sm font-medium"
-                      >
-                        {reading.book.title}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          title={reading.book.title}
+                          className="text-primary max-w-46 truncate text-sm font-medium"
+                        >
+                          {reading.book.title}
+                        </span>
 
-                      {/* <EditReadingDialog
+                        {reading.fetchStatus === 'pending' && (
+                          <Spinner className="size-3" />
+                        )}
+                      </div>
+
+                      <EditReadingDialog
+                        userId={selectedUserId}
                         bookTitle={reading.book.title}
                         reading={{
                           id: reading.id,
                           status: reading.status,
                           rating: reading.rating,
+                          fetchStatus: reading.fetchStatus,
                         }}
-                      /> */}
+                      />
                     </div>
 
                     <span className="text-sm">
