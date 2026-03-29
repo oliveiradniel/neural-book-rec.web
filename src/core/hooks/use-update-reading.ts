@@ -16,10 +16,10 @@ type UseUpdateReadingProps = {
   data: UpdateReadingData;
 };
 
-type ReadingWithStatus = WithStatus<ReadingBook>;
+export type ReadingDetailsWithStatus = WithStatus<ReadingBook>;
 
 export type UserCachedData = Omit<UserWithReadings, 'readings'> & {
-  readings: ReadingWithStatus[];
+  readings: ReadingDetailsWithStatus[];
 };
 
 export function useUpdateReading() {
