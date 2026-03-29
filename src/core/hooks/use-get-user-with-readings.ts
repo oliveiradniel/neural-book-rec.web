@@ -24,7 +24,10 @@ export function useGetUserWithReadings(id: string | null) {
   });
 
   return {
-    userWithReadings: data,
+    userWithReadings: {
+      ...data,
+      readings: data?.readings ?? [],
+    },
     isLoadingUserWithReadings: isLoading,
   };
 }
