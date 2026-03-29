@@ -1,16 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { makeBooksService } from '../factories/make-books-service';
 
-export function useListUnreadBooks(id: string | null) {
+export const UNREAD_BOOKS_QUERY_KEY = (userId: string | null) => [
+  'books',
+  'unread',
+  userId,
+];
+
+export function useListUnreadBooks(userId: string | null) {
   const booksService = makeBooksService();
 
   const { data, isLoading } = useQuery({
-    enabled: !!id,
-    queryKey: ['books', 'unread', id],
+    enabled: !!userId,
+    queryKey: UNREAD_BOOKS_QUERY_KEY(userId),
     queryFn: () => {
-      if (!id) throw new Error('User id is required');
+      if (!userId) throw new Error('User id is required');
 
-      return booksService.getUnreadBooksByUserId(id);
+      return booksService.getUnreadBooksByUserId(userId);
     },
   });
 
