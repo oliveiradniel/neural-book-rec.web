@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-
-import { useListUsersWithReadings } from '../core/hooks/use-list-users-with-readings';
+import { useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -21,25 +19,22 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+// import { EditReadingDialog } from './components/edit-reading-dialog';
 import { Separator } from '@/components/ui/separator';
 
-import type { UserWithReadings } from '@/core/domain/types/user-with-readings';
-import type { ReadingStatus } from '@/core/domain/entities/reading';
-import type { Genre } from '@/core/domain/entities/literary-genre';
+// import type { UserWithReadings } from '@/core/domain/types/user-with-readings';
+import { ReadingStatus } from '@/core/domain/entities/reading';
+import { Genre } from '@/core/domain/entities/literary-genre';
+import { useGetUserWithReadings } from '@/core/hooks/use-get-user-with-readings';
+import { useListOnlyUserNames } from '@/core/hooks/use-list-only-user-names';
 
 export function Home() {
-  const { usersWithReadings, isLoadingUsersWithReadings } =
-    useListUsersWithReadings();
+  const { onlyUserNames, isLoadingOnlyUserNames } = useListOnlyUserNames();
 
-  const [selectedUser, setSelectedUser] = useState<UserWithReadings | null>(
-    null,
-  );
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (usersWithReadings.length > 0 && !selectedUser) {
-      setSelectedUser(usersWithReadings[1]);
-    }
-  }, [usersWithReadings, selectedUser]);
+  const { userWithReadings, isLoadingUserWithReadings } =
+    useGetUserWithReadings(selectedUserId);
 
   const readingStatusLabels: Record<ReadingStatus, string> = {
     READ: 'Concluído',
@@ -67,13 +62,9 @@ export function Home() {
     CHILDREN: 'Infantil',
   };
 
-  const selectUserPlaceholder = isLoadingUsersWithReadings
+  const selectUserPlaceholder = isLoadingOnlyUserNames
     ? 'Carregando usuários...'
-    : selectedUser?.name || 'Selecione um usuário';
-
-  const userAge = isLoadingUsersWithReadings
-    ? '...'
-    : selectedUser?.age || '...';
+    : selectedUserId || 'Selecione um usuário';
 
   return (
     <div className="h-screen w-screen p-8">
@@ -91,7 +82,7 @@ export function Home() {
         </CardHeader>
 
         <CardContent className="flex flex-col gap-8">
-          {!isLoadingUsersWithReadings && usersWithReadings.length === 0 && (
+          {!isLoadingOnlyUserNames && onlyUserNames.length === 0 && (
             <span className="text-base font-medium">
               Nenhum usuário encontrado. Por favor, adicione usuários para
               visualizar suas leituras.
@@ -100,64 +91,78 @@ export function Home() {
 
           <div className="flex items-center gap-4">
             <Select
-              defaultValue={selectedUser?.id}
-              onValueChange={(value) => {
-                const user = usersWithReadings.find(
-                  (user) => user.id === value,
-                );
-
-                setSelectedUser(user || null);
-              }}
+              disabled={!onlyUserNames || isLoadingOnlyUserNames}
+              onValueChange={(value) => setSelectedUserId(value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder={selectUserPlaceholder} />
               </SelectTrigger>
 
               <SelectContent position="popper">
-                {usersWithReadings.map((user) => (
-                  <SelectItem key={user.id} value={user.id}>
+                {onlyUserNames?.map((user) => (
+                  <SelectItem
+                    key={user.id}
+                    value={user.id}
+                    className={cn(
+                      user.id === selectedUserId &&
+                        'bg-accent text-accent-foreground',
+                    )}
+                  >
                     {user.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            <span>Idade: {userAge}</span>
+            {userWithReadings && <span>Idade: {userWithReadings.age}</span>}
           </div>
 
           <Separator />
 
           <div>
-            <span>
-              {isLoadingUsersWithReadings
-                ? 'Carregando leituras...'
-                : `Leituras de ${selectedUser?.name}`}
-            </span>
+            {selectedUserId && (
+              <span>
+                {isLoadingUserWithReadings
+                  ? 'Carregando leituras'
+                  : `Leituras de ${userWithReadings?.name}`}
+              </span>
+            )}
 
-            {isLoadingUsersWithReadings && (
+            {isLoadingUserWithReadings && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {Array.from({ length: 3 }).map(() => (
+                {Array.from({ length: 3 }).map((_, index) => (
                   <Skeleton
-                    id={crypto.randomUUID()}
+                    key={`skeleton-book-${index}`}
                     className="flex h-26 w-full max-w-60 flex-col rounded-md"
                   />
                 ))}
               </div>
             )}
 
-            {!isLoadingUsersWithReadings && (
+            {!isLoadingUserWithReadings && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {selectedUser?.readings.map((reading) => (
+                {userWithReadings?.readings.map((reading) => (
                   <div
-                    key={reading.book.title}
+                    key={reading.id}
                     className="flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md"
                   >
-                    <span
-                      title={reading.book.title}
-                      className="text-primary max-w-50 truncate text-sm font-medium"
-                    >
-                      {reading.book.title}
-                    </span>
+                    <div className="flex items-center justify-between gap-2">
+                      <span
+                        title={reading.book.title}
+                        className="text-primary max-w-50 truncate text-sm font-medium"
+                      >
+                        {reading.book.title}
+                      </span>
+
+                      {/* <EditReadingDialog
+                        bookTitle={reading.book.title}
+                        reading={{
+                          id: reading.id,
+                          status: reading.status,
+                          rating: reading.rating,
+                        }}
+                      /> */}
+                    </div>
 
                     <span className="text-sm">
                       Autor:{' '}
