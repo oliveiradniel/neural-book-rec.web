@@ -1,7 +1,8 @@
 import type { IBooksService } from '../contracts/books-service';
 import type { IHttpClient } from '../contracts/http-client';
-import type { Book } from '../domain/entities/book';
+
 import type { Reading } from '../domain/entities/reading';
+import type { UnreadBook } from '../domain/types/unread-book';
 import type { UpdateReadingData } from '../domain/types/update-reading-data';
 
 export class BooksService implements IBooksService {
@@ -11,8 +12,8 @@ export class BooksService implements IBooksService {
     this.httpClient = httpClient;
   }
 
-  async getUnreadBooksByUserId(userId: string): Promise<Book[]> {
-    const response = await this.httpClient.get<Book[]>(
+  async getUnreadBooksByUserId(userId: string): Promise<UnreadBook[]> {
+    const response = await this.httpClient.get<UnreadBook[]>(
       `books/unread/${userId}`,
     );
 
