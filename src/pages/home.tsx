@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useListOnlyUserNames } from '@/core/hooks/use-list-only-user-names';
 import { useGetUserWithReadings } from '@/core/hooks/use-get-user-with-readings';
+import { useListUnreadBooks } from '@/core/hooks/use-list-unread-books';
 
 import { cn } from '@/lib/utils';
 
@@ -24,12 +25,11 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { EditReadingDialog } from './components/edit-reading-dialog';
 import { Separator } from '@/components/ui/separator';
+import { CreateReadingDialog } from './components/create-reading-data';
+import { Spinner } from '@/components/ui/spinner';
 
 import { ReadingStatus } from '@/core/domain/entities/reading';
 import { Genre } from '@/core/domain/entities/literary-genre';
-import { Spinner } from '@/components/ui/spinner';
-import { useListUnreadBooks } from '@/core/hooks/use-list-unread-books';
-import { Button } from '@/components/ui/button';
 
 export function Home() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -159,7 +159,7 @@ export function Home() {
                       <div className="flex items-center gap-2">
                         <span
                           title={reading.book.title}
-                          className="text-primary max-w-46 truncate text-sm font-medium"
+                          className="text-primary max-w-40 truncate text-sm font-medium"
                         >
                           {reading.book.title}
                         </span>
@@ -293,11 +293,17 @@ export function Home() {
                     </span>
 
                     <div className="mt-2 flex flex-1 items-end gap-2">
-                      <Button size="xs">Ler</Button>
-
-                      <Button variant="outline" size="xs">
-                        Quero ler
-                      </Button>
+                      <CreateReadingDialog
+                        userId={selectedUserId}
+                        book={{
+                          id: book.id,
+                          title: book.title,
+                          authorName: book.author.name,
+                          literaryGenres: book.literaryGenres.map(
+                            (literaryGenre) => literaryGenre.name,
+                          ),
+                        }}
+                      />
                     </div>
                   </div>
                 ))}

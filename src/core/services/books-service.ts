@@ -26,10 +26,8 @@ export class BooksService implements IBooksService {
     bookId: string,
     data: CreateReadingData,
   ): Promise<ReadingBook> {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const response = await this.httpClient.post<CreateReadingData, ReadingBook>(
-      `/bookss/${bookId}/readings`,
+      `/books/${bookId}/readings`,
       {
         userId: data.userId,
         status: data.status,
@@ -45,7 +43,7 @@ export class BooksService implements IBooksService {
     data: UpdateReadingData,
   ): Promise<Reading> {
     const response = await this.httpClient.patch<UpdateReadingData, Reading>(
-      `/bookss/readings/${readingId}`,
+      `/books/readings/${readingId}`,
       data,
     );
 
