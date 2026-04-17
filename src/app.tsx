@@ -1,15 +1,10 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+
+import { queryClient } from './core/query-client';
+
 import { Home } from './pages/home';
 
 export function App() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
-
   return (
     <QueryClientProvider client={queryClient}>
       <Home />
