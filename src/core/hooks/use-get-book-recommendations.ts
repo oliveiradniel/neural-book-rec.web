@@ -1,12 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { makeAiService } from '../factories/make-ai-service';
 
+export const BOOK_RECOMMENDATIONS_QUERY_KEY = (userId: string | null) => {
+  return ['book', 'recommendations', userId];
+};
+
 export function useGetBookRecommendations(userId: string | null) {
   const aiService = makeAiService();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     enabled: !!userId,
-    queryKey: ['book', 'recommendations', userId],
+    queryKey: BOOK_RECOMMENDATIONS_QUERY_KEY(userId),
     queryFn: () => {
       if (!userId) throw new Error('User id is required');
 
@@ -17,5 +21,6 @@ export function useGetBookRecommendations(userId: string | null) {
   return {
     bookRecommendations: data ?? [],
     isLoadingBookRecommendations: isLoading,
+    isFetchingBookRecommendations: isFetching,
   };
 }
