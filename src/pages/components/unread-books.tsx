@@ -55,9 +55,9 @@ export function UnreadBooks({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        {userId && (
-          <div className="flex items-center gap-4">
+      {userId && (
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <span className="text-xl">
               {isLoading ? 'Carregando livros' : 'Livros'}
             </span>
@@ -71,9 +71,7 @@ export function UnreadBooks({
               className="min-w-80"
             />
           </div>
-        )}
 
-        {userId && (
           <div className="flex items-center gap-1">
             <span className="mr-3">
               Página {unreadBooksTable.getState().pagination.pageIndex + 1} de{' '}
@@ -104,8 +102,8 @@ export function UnreadBooks({
               <ChevronsRight />
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {isLoading && (
         <div className="mt-4 flex flex-wrap gap-2">
@@ -119,7 +117,7 @@ export function UnreadBooks({
       )}
 
       {!isLoading && (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {unreadBooksTable?.getRowModel().rows.map((row) => {
             const { id, title, author, literaryGenres, countActiveReadings } =
               row.original;
@@ -127,7 +125,7 @@ export function UnreadBooks({
             return (
               <div
                 key={id}
-                className="flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md"
+                className="flex w-full flex-col rounded-md border p-2 shadow-md"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span

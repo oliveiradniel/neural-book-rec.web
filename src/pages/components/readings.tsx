@@ -57,9 +57,9 @@ export function Readings({ user, readings, isLoading }: ReadingsProps) {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        {user.id && (
-          <div className="flex items-center gap-4">
+      {user.id && (
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <span className="text-xl">
               {isLoading ? 'Carregando leituras' : `Leituras de ${user?.name}`}
             </span>
@@ -73,9 +73,7 @@ export function Readings({ user, readings, isLoading }: ReadingsProps) {
               className="min-w-80 flex-1"
             />
           </div>
-        )}
 
-        {user.id && (
           <div className="flex items-center gap-1">
             <span className="mr-3">
               Página {readingsTable.getState().pagination.pageIndex + 1} de{' '}
@@ -106,8 +104,8 @@ export function Readings({ user, readings, isLoading }: ReadingsProps) {
               <ChevronsRight />
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {isLoading && (
         <div className="mt-4 flex flex-wrap gap-2">
@@ -121,7 +119,7 @@ export function Readings({ user, readings, isLoading }: ReadingsProps) {
       )}
 
       {!isLoading && (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {readingsTable.getRowModel().rows.map((row) => {
             const { id, fetchStatus, book, status, rating } = row.original;
 
@@ -129,7 +127,7 @@ export function Readings({ user, readings, isLoading }: ReadingsProps) {
               <div
                 key={id}
                 className={cn(
-                  'flex w-full max-w-60 flex-col rounded-md border p-2 shadow-md',
+                  'flex w-full flex-col rounded-md border p-2 shadow-md',
                   fetchStatus === 'pending' && 'opacity-70',
                   fetchStatus === 'error' && 'border-destructive/40 border',
                 )}
