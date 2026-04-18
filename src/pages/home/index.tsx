@@ -19,6 +19,8 @@ import { UserSelect } from '../components/user-select';
 import { BookRecommendationSheet } from '../components/book-recommendation-sheet';
 import { Button } from '@/components/ui/button';
 import { useTrainModel } from '@/core/hooks/use-train-model';
+import { useHasModel } from '@/core/hooks/use-has-model';
+import { Spinner } from '@/components/ui/spinner';
 
 export function Home() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -29,6 +31,7 @@ export function Home() {
   const { unreadBooks, isLoadingUnreadBooks } =
     useListUnreadBooks(selectedUserId);
 
+  const { hasModel, isChecking } = useHasModel();
   const { trainModel, isTrainingModel } = useTrainModel(selectedUserId);
 
   useLayoutEffect(() => {
@@ -86,14 +89,25 @@ export function Home() {
                 variant="outline"
                 onClick={() => handleTrainModel()}
               >
-                Treinar modelo
+                {isTrainingModel ? (
+                  <span className="flex items-center gap-2">
+                    <Spinner />
+                    Treinando modelo
+                  </span>
+                ) : (
+                  'Treinar modelo'
+                )}
               </Button>
 
               <BookRecommendationSheet
-                disabled={isLoadingOnlyUserNames}
+                disabled={isLoadingOnlyUserNames || isChecking || !hasModel}
                 userId={selectedUserId}
               />
             </div>
+
+            <p className="text-sm">
+              Treine o modelo para poder ver as recomendações para este usuário.
+            </p>
           </div>
 
           {!isLoadingOnlyUserNames && <Separator className="my-8" />}
