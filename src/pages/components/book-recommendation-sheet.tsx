@@ -39,7 +39,7 @@ export function BookRecommendationSheet({
       <SheetContent className="min-w-120">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            Recomendações {isFetchingBookRecommendations && <Spinner />}
+            TOP 10 Recomendações {isFetchingBookRecommendations && <Spinner />}
           </SheetTitle>
           <SheetDescription>
             De acordo com seu perfil e leituras recomendamos estes livros que
@@ -64,7 +64,16 @@ export function BookRecommendationSheet({
 
           {!isLoadingBookRecommendations &&
             bookRecommendations?.map(
-              ({ id, title, author, literaryGenres, countActiveReadings }) => {
+              ({
+                id,
+                title,
+                author,
+                literaryGenres,
+                countActiveReadings,
+                score,
+              }) => {
+                const percent = `${score * 100}%`;
+
                 return (
                   <div
                     key={id}
@@ -95,12 +104,19 @@ export function BookRecommendationSheet({
                     </div>
 
                     <div className="mt-2 flex items-end gap-2">
-                      <span className="mt-2 flex flex-1 items-end gap-1 text-xs">
-                        Leituras ativas:
-                        <strong className="text-primary">
-                          {countActiveReadings}
-                        </strong>
-                      </span>
+                      <div className="flex-1">
+                        <span className="mt-2 flex items-end gap-1 text-xs">
+                          Leituras ativas:
+                          <strong className="text-primary">
+                            {countActiveReadings}
+                          </strong>
+                        </span>
+
+                        <span className="mt-2 flex items-end gap-1 text-xs">
+                          Compatibilidade:
+                          <strong className="text-primary">{percent}</strong>
+                        </span>
+                      </div>
 
                       <CreateReadingDialog
                         userId={userId}
