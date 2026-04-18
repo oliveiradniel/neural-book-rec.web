@@ -21,6 +21,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 import { ReadingStatus } from '@/core/domain/entities/reading';
+import { toast } from 'sonner';
 
 type EditReadingDialogProps = {
   userId: string | null;
@@ -67,7 +68,13 @@ export function EditReadingDialog({
         },
       });
     } catch {
-      // setOpen(true);
+      if (readingStatus === ReadingStatus.READ) {
+        toast.error(`Não foi possível atualizar a leitura "${bookTitle}".`);
+      } else {
+        toast.error(
+          `Não foi possível adicionar "${bookTitle}" à sua lista de leituras.`,
+        );
+      }
     }
   }
 

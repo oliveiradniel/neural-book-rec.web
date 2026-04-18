@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 import { ReadingStatus } from '@/core/domain/entities/reading';
 import { Genre } from '@/core/domain/entities/literary-genre';
+import { toast } from 'sonner';
 
 type CreateReadingDialogProps = {
   userId: string | null;
@@ -68,7 +69,13 @@ export function CreateReadingDialog({
         rating,
       });
     } catch {
-      //
+      if (readingStatus === ReadingStatus.READ) {
+        toast.error(`Não foi possível ler "${book.title}".`);
+      } else {
+        toast.error(
+          `Não foi possível adicionar "${book.title}" à sua lista de leituras.`,
+        );
+      }
     }
   }
 
