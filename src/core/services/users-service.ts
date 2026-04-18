@@ -22,7 +22,6 @@ export class UsersService implements IUsersService {
     const response = await this.httpClient.get<UserWithReadings>(
       `/users/${id}`,
     );
-
     return response.data;
   }
 

@@ -5,7 +5,7 @@ import { makeUsersService } from '../factories/make-users-service';
 import type { UserCachedData } from './use-update-reading';
 
 export const USER_WITH_READINGS_QUERY_KEY = (id: string | null) => [
-  'users',
+  'user',
   'with-readings',
   id,
 ];

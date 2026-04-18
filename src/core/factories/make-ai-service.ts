@@ -4,6 +4,6 @@ import { makeHttpClient } from './make-http-client';
 
 import type { IAIService } from '../contracts/ai-service';
 
-export function makeAiService(): IAIService {
+export function makeAIService(): IAIService {
   return new AIService(makeHttpClient());
 }
